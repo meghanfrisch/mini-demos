@@ -46,44 +46,81 @@ for (c in 1:ncol(genre_matrix)) {
 } 
 
 # Create search matrix
-
+search_matrix <- cbind(movies[,1:2], genre_matrix)
 
 # Create ratings matrix. Rows = userId, Columns = movieId
+rating_matrix <- dcast(ratings, userId~movieId, value.var = "rating", na.rm = FALSE)
 
 # Remove userId's
+rating_matrix <- as.matrix(rating_matrix[,-1])
 
 # Convert rating matrix into a recommenderlab sparse matrix
+rating_matrix <- as(rating_matrix, "realRatingMatrix")
 
 
 # Selecting relevant data
 # Select minimum number of users per rated movie
 # and the minimum views per user
-
+ratings_movies <- rating_matrix[
+  rowCounts(rating_matrix) > 50,
+  colCounts(rating_matrix) > 50
+]
 
 # Normalize the data
 # Remove bias instances of data 
 # Averages the rating for each user to 0
-
+normalized_ratings_movies <- normalize(ratings_movies)
+sum(rowMeans(normalized_ratings_movies) > 0.00001)
 
 
 # Define training and set data
-
-
-
+training <- sample(
+  x = c(TRUE, FALSE), 
+  size = nrow(ratings_movies),
+  replace = TRUE, 
+  prob = c(0.8, 0.2)
+)
+training_data <- ratings_movies[training, ]
+test_data <- ratings_movies[!training, ]
 
 # Building the recommendation model
+recommender_models <- recommenderRegistry$get_entries(dataType = "realRatingMatrix")
+recommender_models$IBCF_realRatingMatrix$parameters
+
+rec_model <- Recommender(
+  data = training_data, 
+  method = "IBCF",
+  parameter = list(k = 30)
+)
 
 
 
 # Applying the recommender system on the original dataset
 
 # No. of recommendations we want per user 
+recommendations <- 10
 
+prediction <- predict(
+  object = rec_model, 
+  newdata = test_data, 
+  n = recommendations
+)
 
 
 # Recommendations for the first user
+user_1_recommendations <- prediction@items[[1]] 
+movies_user_1 <- prediction@itemLabels[user_1_recommendations]
+movies_user_2 <- movies_user_1
+for (i in 1:10) {
+  movies_user_2[i] <- as.character(subset(movies, 
+                                          movies$movieId == movies_user_1[i])$title)
+}
 
 
 # A matrix of recommendations for each user
-
+rec_matrix <- sapply(
+  prediction@items, 
+  function(x){ as.integer(colnames(ratings_movies)[x]) }
+)
+rec_matrix[,1:4]
 
