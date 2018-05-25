@@ -23,28 +23,38 @@ rank_data <- html_text(rank_data_html)
 
 head(rank_data)
 
-rank_data<-as.numeric(rank_data)
+rank_data <- as.numeric(rank_data)
 head(rank_data)
 
 #Using CSS selectors to scrape the title section
+title_data_html <- html_nodes(webpage,'.lister-item-header a')
 
 #html to text 
+title_data <- html_text(title_data_html)
 
 #look at data
+head(title_data)
 
 #Using CSS selectors to scrape the description section
+description_data_html <- html_nodes(webpage,'.ratings-bar+ .text-muted')
 
 #Converting the description data to text
+description_data <- html_text(description_data_html)
 
 #look at data
+head(description_data)
 
 #Data-Preprocessing: removing '\n'
 
+
 #Using CSS selectors to scrap the Movie runtime section
+runtime_data_html <- html_nodes(webpage,'.text-muted .runtime')
 
 #Converting the movie runtime data to text
+runtime_data <- html_text(runtime_data_html)
 
 #Let's have a look at the movie runtime
+head(runtime_data)
 
 #Data-Preprocessing: removing mins and converting it to numerical
 
@@ -53,8 +63,11 @@ head(rank_data)
 
 
 #Converting the genre data to text
+genre_data_html <- html_nodes(webpage,'.genre')
+genre_data <- html_text(genre_data_html)
 
 #Let's have a look at the genre
+head(genre_data)
 
 #Data-Preprocessing: removing \n
 
@@ -78,27 +91,35 @@ head(rank_data)
 
 
 #Using CSS selectors to scrap the directors section
+directors_data_html <- html_nodes(webpage,'.text-muted+ p a:nth-child(1)')
 
 #Converting the directors data to text
+directors_data <- html_text(directors_data_html)
 
 #Let's have a look at the directors data
+head(directors_data)
 
 #Data-Preprocessing: converting directors data into factors
 
 #Using CSS selectors to scrap the actors section
+actors_data_html <- html_nodes(webpage, '.lister-item-content .ghost+ a')
 
 #Converting the gross actors data to text
+actors_data <- html_text(actors_data_html)
 
 #Let's have a look at the actors data
+head(actors_data)
 
 #Data-Preprocessing: converting actors data into factors
 
 #Using CSS selectors to scrap the gross revenue section
+rev_data_html <- html_nodes(webpage, '.ghost~ .text-muted+ span')
 
 #Converting the gross revenue data to text
+rev_data <- html_text(rev_data_html)
 
 #Let's have a look at the votes data
-
+head(rev_data)
 
 #Data-Preprocessing: removing '$' and 'M' signs
 
