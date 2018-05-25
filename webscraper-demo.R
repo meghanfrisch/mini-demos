@@ -45,7 +45,7 @@ description_data <- html_text(description_data_html)
 head(description_data)
 
 #Data-Preprocessing: removing '\n'
-
+description_data <- gsub("\n","",description_data)
 
 #Using CSS selectors to scrap the Movie runtime section
 runtime_data_html <- html_nodes(webpage,'.text-muted .runtime')
@@ -57,9 +57,11 @@ runtime_data <- html_text(runtime_data_html)
 head(runtime_data)
 
 #Data-Preprocessing: removing mins and converting it to numerical
-
+runtime_data <- gsub(" min","",runtime_data)
+runtime_data <- as.numeric(runtime_data)
 
 #Let's have another look at the runtime data
+head(rank_data)
 
 
 #Converting the genre data to text
@@ -70,24 +72,35 @@ genre_data <- html_text(genre_data_html)
 head(genre_data)
 
 #Data-Preprocessing: removing \n
+genre_data <- gsub("\n","",genre_data)
 
 #Data-Preprocessing: removing excess spaces
+genre_data <- gsub(" ","",genre_data)
 
 #taking only the first genre of each movie
+genre_data <- gsub(",.*","",genre_data)
 
 #Convering each genre from text to factor
+genre_data <- as.factor(genre_data)
 
 #Let's have another look at the genre data
+head(genre_data)
+
 
 #Using CSS selectors to scrap the IMDB rating section
+rating_data_html <- html_nodes(webpage,'.ratings-imdb-rating strong')
 
 #Converting the ratings data to text
+rating_data <- html_text(rating_data_html)
 
 #Let's have a look at the ratings
+head(rating_data)
 
 #Data-Preprocessing: converting ratings to numerical
+rating_data <- as.numeric(rating_data)
 
 #Let's have another look at the ratings data
+head(rating_data)
 
 
 #Using CSS selectors to scrap the directors section
@@ -100,6 +113,8 @@ directors_data <- html_text(directors_data_html)
 head(directors_data)
 
 #Data-Preprocessing: converting directors data into factors
+directors_data <- as.factor(directors_data)
+
 
 #Using CSS selectors to scrap the actors section
 actors_data_html <- html_nodes(webpage, '.lister-item-content .ghost+ a')
@@ -111,6 +126,8 @@ actors_data <- html_text(actors_data_html)
 head(actors_data)
 
 #Data-Preprocessing: converting actors data into factors
+actors_data <- as.factor(actors_data)
+
 
 #Using CSS selectors to scrap the gross revenue section
 rev_data_html <- html_nodes(webpage, '.ghost~ .text-muted+ span')
@@ -122,7 +139,8 @@ rev_data <- html_text(rev_data_html)
 head(rev_data)
 
 #Data-Preprocessing: removing '$' and 'M' signs
-
+rev_data <- gsub("M","",rev_data)
+rev_data <- substring(rev_data,2,6)
 
 #Let's check the length of gross data
 length(gross_data)
